@@ -261,10 +261,21 @@ if (isset($_GET['delete'])) {
                   <tbody>
                   
     
-                  <?php while($n=$req->fetch()) { 
+                  <?php 
+                            
+                    $init_prixv = 0; 
+                    $init_prixa = 0;
+                    while($n=$req->fetch()) { 
+                     //Somme de tous les prix de vente
+                     $sum_prixv = $init_prixv + intval($n['prixv']);
+                     
+                     //Somme de tous les prix d'achat
+                     $sum_prixa = $init_prixa + intval($n['prixa']);
+ 
                     if($n['quant'] == 0){
                       $out = 'true';
                     }
+                   
 
                     ?>
                     <tr>
