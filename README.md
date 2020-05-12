@@ -4,10 +4,10 @@ A store management system that performs the CRUD operation in a store.
 
 With it you can:
 
-> 1. add new items
+> 1. Add new items
 > 2. See all items
-> 3. remove a specific item
-> 4. update an item
+> 3. Remove a specific item
+> 4. Update an item
 
 ## Techologies used
 
