@@ -1,4 +1,5 @@
- 
+
+   
 <script type="text/javascript">
   function delet() {
     return confirm('are you sure ?');
@@ -22,13 +23,15 @@ if(isset($_POST['sub'])){
   $move->execute(array($last['name'],$last['type'],$_POST['price'],$last['prixa'],$_POST['quant'],$last['datee']));
   if($move){
     //generating the benefice
-    $benefit = $_POST['price'] - $last['prixa']; 
+    // $benefit = $_POST['price'] - $last['prixa']; 
 
-    $new_quant = $last['quant'] - $_POST['quant'];
-    $update = $bdd->prepare('UPDATE stock SET quant = ? WHERE id = ?');
-    $update->execute(array($new_quant,$id));
-    $earnings = $bdd->prepare('INSERT INTO earnings (prices) VALUES (?)');
-    $earnings->execute(array($benefit));
+     $new_quant = $last['quant'] - $_POST['quant'];
+    $new_solde = $last['prixv']  * $_POST['quant'];
+    $update = $bdd->prepare('UPDATE stock SET quant,solde = ?,? WHERE id = ?');
+    $update->execute(array($new_quant,$new_solde,$id));
+
+    // $earnings = $bdd->prepare('INSERT INTO earnings (prices) VALUES (?)');
+    // $earnings->execute(array($benefit));
 
 
 
@@ -48,6 +51,9 @@ if (isset($_GET['delete'])) {
   $requi->execute(array($del));
   header("location:tables.php");
 }
+
+
+ 
 
 
 
@@ -243,28 +249,31 @@ if (isset($_GET['delete'])) {
                       
                     </tr>
                   </thead>
-                  <tfoot>
-                    <tr>
-                      <th>date</th>
-                      <th>Name</th>
-                      <th>type </th>
-                      <th>prix d'achat</th>
-                      <th>prix de vente</th>
-                      <th>piece</th>
-                      
-                      <th></th>
-                      <td>mettre a jour</td>
-                      <td>effacer</td>
-                      
-                    </tr>
-                  </tfoot>
+                  
                   <tbody>
                   
     
-                  <?php while($n=$req->fetch()) { 
+                  <?php 
+
+                  $sum=0;
+                    $queryst="SELECT * FROM stock";
+                    $stv=$bdd->prepare($queryst);
+                    $stv->execute();
+                    $result=$stv->fetchAll();
+
+                  
+                            
+                    
+                    while($n=$req->fetch()) { 
+
+                      $sum+= intval($n['solde']);
+                      
+                     
+ 
                     if($n['quant'] == 0){
                       $out = 'true';
                     }
+                   
 
                     ?>
                     <tr>
@@ -286,7 +295,7 @@ if (isset($_GET['delete'])) {
 
                        ?></td>
                       <td><?= $n['datee']?></td>
-                      <td><?= $n['quant']*$n['prixv']?></td>
+                      <td><?=  $n['solde'] ?></td>
                      
                       <td><a href="up.php?id=<?= $n['id'] ?>"><button class="btn btn-primary">mettre a jour</button></a></td>
                       <td><a href="delete.php?id=<?= $n['id'] ?>"><button class="btn btn-danger">effacer</button></a></td>
@@ -301,6 +310,22 @@ if (isset($_GET['delete'])) {
                     <?php } ?>
                    
                   </tbody>
+                  <tfoot>
+                    <tr>
+                      <th>date</th>
+                      <th>Name</th>
+                      <th>type </th>
+                      
+                      <th></th>
+                      <th></th>
+                      <th>date</th>
+                      
+                      <th><?php echo "$sum";  ?></th>
+                      <td>mettre a jour</td>
+                      <td>effacer</td>
+                      
+                    </tr>
+                  </tfoot>
                 </table>
 
               <?php } ?>
@@ -374,3 +399,4 @@ if (isset($_GET['delete'])) {
 </body>
 
 </html>
+

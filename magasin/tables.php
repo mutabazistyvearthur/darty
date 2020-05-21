@@ -16,19 +16,29 @@ if(isset($_POST['sub'])){
   $getlast = $bdd->prepare('SELECT * FROM stock WHERE id = ?');
   $getlast->execute(array($id));
   $last = $getlast->fetch();
+
   if($last['quant'] >= $_POST['quant']){
 
     $move = $bdd->prepare('INSERT INTO inventory (name,type,prixa,prixv,quant,datee) VALUES (?,?,?,?,?,?)');
-  $move->execute(array($last['name'],$last['type'],$_POST['price'],$last['prixa'],$_POST['quant'],$last['datee']));
+  $move->execute(array($last['name'],$last['type'],$_POST['price'],$last['prixa'],$_POST['quant'],$last['datee'],));
   if($move){
     //generating the benefice
-    $benefit = $_POST['price'] - $last['prixa']; 
-
+     $new_solde =intval($last['prixv']) * intval($last['quant']);
+  $upd= $bdd->prepare('UPDATE stock SET solde = ? WHERE id = ?');
+    $upd->execute(array($new_solde,$id));
+    
+   
     $new_quant = $last['quant'] - $_POST['quant'];
+    
     $update = $bdd->prepare('UPDATE stock SET quant = ? WHERE id = ?');
     $update->execute(array($new_quant,$id));
-    $earnings = $bdd->prepare('INSERT INTO earnings (prices) VALUES (?)');
-    $earnings->execute(array($benefit));
+
+    
+
+    
+
+    // $earnings = $bdd->prepare('INSERT INTO earnings (prices) VALUES (?)');
+    // $earnings->execute(array($benefit));
 
 
 
@@ -37,6 +47,8 @@ if(isset($_POST['sub'])){
   }
 
   }else $msg = '<span style="color:red">Desole votre stock est insuffisant vender au moins  '. $last['quant'] .'</span>';
+
+
 
   
   
@@ -48,6 +60,8 @@ if (isset($_GET['delete'])) {
   $requi->execute(array($del));
   header("location:tables.php");
 }
+
+
 
 
 

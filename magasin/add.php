@@ -8,9 +8,10 @@
       $prixa=htmlspecialchars($_POST['prixa']);
       $prixv=htmlspecialchars($_POST['prixv']);
       $quant=htmlspecialchars($_POST['quant']);
+      $solde=htmlspecialchars($_POST['quant']*$_POST['prixv']);
 
-      $ins = $bdd->prepare('INSERT INTO stock(name,type,prixa,prixv,datee,quant) VALUES (?,?,?,?,NOW(),?)');
-       $ins->execute(array($name,$type,$prixa,$prixv,$quant));
+      $ins = $bdd->prepare('INSERT INTO stock(name,type,prixa,prixv,datee,quant,solde) VALUES (?,?,?,?,NOW(),?,?)');
+       $ins->execute(array($name,$type,$prixa,$prixv,$quant,$solde));
 
       $msg = '<span style="color: green;">la marchindise a bien ete stocker </span>';
     }else $msg = '<span style="color: red;">vous devez tout completer</span>';
